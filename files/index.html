@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord bot info</title>
+    <link rel="icon" href="data:,">
+    <style>
+
+        /* Base styling */
+
+        *{box-sizing: border-box}
+        body, html{
+            font-family: sans-serif;
+            width: 100vw;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        #profilepic{
+            border-radius: 999px;
+            height: 40px;
+        }
+        header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            height: 50px;
+            padding: 0 10px;
+            position: fixed;
+            z-index: 9999;
+        }
+        input[type="radio"]{display: none;}
+        #menu{
+            display: flex;
+            flex-direction: column;
+            width: 200px;
+            position: fixed;
+            justify-content: space-between;
+            z-index: 9999;
+            height: calc(100% - 50px);
+        }
+        #menu > div{
+            display: flex;
+            flex-direction: column;
+        }
+        label{
+            cursor: pointer;
+            height: 30px;
+            font-size: 20px;
+            padding-left: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .noheader{
+            display: flex;
+            min-height: calc(100vh - 50px);
+            margin-top: 50px;
+        }
+        #main{flex: 1; margin-left: 200px;}
+        #nguilds{text-align: center}
+        .img-placeholder, guild img, .div-overlay{
+            height: 128px;
+            width: 128px;
+            height: 128px;
+            width: 128px;
+        }
+        .img-placeholder{
+            background-color: black;
+            font-size: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            word-break: break-all;
+        }
+        #guildlist{
+            display: flex;
+            flex-wrap: wrap;
+            padding-top: 30px;
+            padding-left: 30px;
+        }
+        guild{
+            transition: 0.2s ease-in-out;
+            width: 200px;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+        guild:hover{
+            transform: translateY(5px);
+        }
+        guild > div{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        a{
+            color: white;
+            text-decoration: none;
+        }
+        .div-overlay{
+            display: grid;
+            place-items: center;
+        }
+        .div-overlay *{grid-area: 1 / 1}
+        .overlay-content{
+            opacity: 0;
+            background-color: rgba(0,0,0,0.3);
+            transition: 0.3s ease-in-out;
+            padding: 0;
+            margin: 0;
+            width: 128px;
+            height: 128px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .overlay-content:hover{opacity: 1}
+        .buttons{
+            margin-bottom: -25px;
+        }
+        .buttons button{
+            transition: 0.3s ease-in-out;
+            background-color: rgb(47, 81, 112);
+            color: white;
+            padding: 5px;
+            font-size: 15px;
+            width: 100px;
+            border: 0;
+            font-family:Arial, Helvetica, sans-serif;
+            font-weight: 700;
+            margin-top: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .buttons button:hover{
+            background-color: rgb(0, 54, 104);
+        }
+        .flexbox{
+            display: flex;
+            width: 100%;
+        }
+        .guildinfo2{
+            margin-top: 20px;
+            align-items: center;
+            justify-content: center;
+            gap: 30px
+        }
+        .guildname{
+            width: 200px;
+            word-break: break-word;
+        }
+        .membercount{
+            font-weight: 600;
+        }
+        #openMenu{
+            display: none;
+        }
+        #botNameSidebar{
+            display: none;
+        }
+        .sidebar-btn{
+            height: 30px;
+            width: 170px;
+            border: none;
+            margin: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+        }
+        .popup-shadow{
+            background-color: rgba(0,0,0,0.3);
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            z-index: 10000;
+        }
+
+        /* Mobile only */
+
+        @media only screen and (max-width: 768px) {
+            guild{
+                font-size: 12px;
+                width: 100px;
+                padding-top: 15px;
+            }
+            .overlay-content, guild img, .div-overlay, .img-placeholder{
+                width: 80px;
+                height: 80px;
+            }
+            label, #menu{
+                font-size: 17px;
+            }
+            header > h2{
+                font-size: 20px;
+            }
+            #botNameHeader{
+                display: none;
+            }
+            .buttons button{
+                margin-top: 0;
+            }
+            .guildname{
+                width: 100px;
+            }
+            #openMenu{
+                display: block;
+                height: 40px;
+            }
+            header > div{
+                display: flex;
+                align-items: center;
+            }
+            .img-placeholder{
+                font-size: 15px;
+            }
+            #menu{
+                transform: translateX(-200px);
+                transition: ease-in-out 0.3s;
+                margin-right: -230px;
+            }
+            #menu.opened{
+                transform: translateX(0);
+            }
+            #main{margin-left: 0;}
+            .buttons button{
+                width: 70px;
+            }
+            #botNameSidebar{
+                display: block;
+                text-align: center;
+            }
+            #guildlist{
+                padding: 10px;
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            guild{background-color: rgb(220, 220, 220);}
+            #menu{background-color: rgb(230,230,230);}
+            input[type="radio"]:checked + label, label:hover{background-color: rgb(210,210,210);}
+            header{background-color: rgb(230,230,230);}
+        }
+        @media (prefers-color-scheme: dark) {
+            header{background-color: rgb(30,30,30);}
+            body{
+                color: white;
+                background-color: rgb(50, 50, 50);
+            }
+            guild{background-color: rgb(20, 20, 20);}
+            #menu{background-color: rgb(70,70,70);}
+            input[type="radio"]:checked + label, label:hover{background-color: rgb(60,60,60);}
+        }
+
+        /* Light mode */
+
+        body[mode="light"] guild{background-color: rgb(220, 220, 220);}
+        body[mode="light"] #menu{background-color: rgb(230,230,230);}
+        body[mode="light"] input[type="radio"]:checked + label, body[mode="light"] label:hover{background-color: rgb(210,210,210);}
+        body[mode="light"] header{background-color: rgb(230,230,230);}
+        body[mode="light"]{
+            color: black;
+            background-color: white;
+        }
+
+        /* Dark mode */
+
+        body[mode="dark"] header{background-color: rgb(30,30,30);}
+        body[mode="dark"]{
+            color: white;
+            background-color: rgb(50, 50, 50);
+        }
+        body[mode="dark"] guild{background-color: rgb(20, 20, 20);}
+        body[mode="dark"] #menu{background-color: rgb(70,70,70);}
+        body[mode="dark"] input[type="radio"]:checked + label, body[mode="dark"] label:hover{background-color: rgb(60,60,60);}
+    </style>
+</head>
+<body>
+    <div class="popup-shadow" style="display: none;"></div>
+    <header>
+        <div>
+            <svg onclick="menuOpen()" fill="currentColor" version="1.1" id="openMenu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24.75 24.75" xml:space="preserve" stroke-width="0"><path d="M0,3.875c0-1.104,0.896-2,2-2h20.75c1.104,0,2,0.896,2,2s-0.896,2-2,2H2C0.896,5.875,0,4.979,0,3.875z M22.75,10.375H2 c-1.104,0-2,0.896-2,2c0,1.104,0.896,2,2,2h20.75c1.104,0,2-0.896,2-2C24.75,11.271,23.855,10.375,22.75,10.375z M22.75,18.875H2 c-1.104,0-2,0.896-2,2s0.896,2,2,2h20.75c1.104,0,2-0.896,2-2S23.855,18.875,22.75,18.875z"></path> </svg>
+            <p id="botNameHeader"></p>
+        </div>
+        <h2>Discord bot info</h2>
+        <img id="profilepic">
+    </header>
+    <div class="noheader">
+        <sidebar id="menu">
+            <div class="up">
+                <input type="radio" name="sidebar" id="guildsSidebar">
+                <label for="guildsSidebar">Guilds</label>
+                <input type="radio" name="sidebar" id="settingsSidebar">
+                <label for="settingsSidebar">Settings</label>
+            </div>
+            <div class="down">
+                <button class="sidebar-btn" id="darkModeSwitch" onclick="themeSwitch(this)" style="background-color: green;">Dark mode</button>
+                <p id="botNameSidebar"></p>
+            </div>
+        </sidebar>
+        <div id="main">
+            <div id="guildsBlock">
+                <h1 id="nguilds"></h1>
+                <div id="guildlist"></div>
+            </div>
+            <div id="guildBlock" style="display: none;">
+                <div id="guildBanner"></div>
+                <div class="flexbox guildinfo2">
+                    <div id="guildAvatar"></div>
+                    <h1 id="guildName"></h1>
+                </div>
+            </div>
+            <!-- TODO -->
+            <div id="settingsBlock" style="display: none;">
+                <div class="mode">
+                    <h2>Color scheme</h2>
+                    <dropdown>
+                        <button>Device theme</button>
+                        <div class="options">
+                            <button>Device theme</button>
+                            <button>Dark mode</button>
+                            <button>Light mode</button>
+                        </div>
+                    </dropdown>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // website functionality
+        const resizeEvent = () => document.body.style.minHeight = window.innerHeight + "px"
+        resizeEvent()
+        addEventListener('resize', resizeEvent)
+        function themeSwitch(e){
+            if(e.checked){
+                e.style.backgroundColor = "green"
+                document.body.setAttribute("mode", "dark")
+                e.innerHTML = "Dark mode"
+                localStorage.theme = "dark"
+            }
+            else{
+                e.style.backgroundColor = "red"
+                document.body.setAttribute("mode", "light")
+                e.innerHTML = "Light mode"
+                localStorage.theme = "light"
+            }
+            e.checked = !e.checked
+        }
+        if(localStorage.theme === "1"){
+            themeSwitch(darkModeSwitch)
+        }
+        function menuOpen(){
+            if(openMenu.checked){
+                menu.className = ''
+                openMenu.checked = false
+            } else{
+                menu.className = 'opened'
+                openMenu.checked = true
+            }
+        }
+        function download(){
+            let link = document.createElement("a")
+            link.href = 'data:text/html;base64,' + btoa((new XMLSerializer).serializeToString(document))
+            link.download = "website.html";
+            link.click()
+        }
+        let conn = new WebSocket(window.location.href.replace("http", "ws").replace("https", "wss"), "refresh")
+        conn.onmessage = m => {
+            console.log(JSON.parse(m.data))
+        }
+    </script>
+    <script>
+        // website generation
+        const info = {DATA}
+        const guilds = info[0]
+        const bot = info[1]
+        botNameHeader.innerHTML = bot.tag
+        botNameSidebar.innerHTML = bot.tag
+        profilepic.src = bot.avatar
+        nguilds.innerHTML = `${guilds.length} Servers`
+        guilds.forEach((data) => {
+            guildlist.innerHTML +=
+`<guild>
+    <div id="g${data.id}">
+        <a class="div-overlay" href="./invite/${data.id}">
+            ${data.icon ? `<img src="${data.icon}">` : `<div class="img-placeholder">${data.nameAcronym}</div>`}
+            <h3 class="overlay-content">
+                Join server
+            </h3>
+        </a>
+        <div class="guildinfo">
+            <div class="membercount"><span>${data.memberCount}</span> Members</div>
+            <div class="guildname">${data.name}</div>
+        </div>
+    </div>
+    <div class="buttons">
+        <button onclick="fetch('./guild/${data.id}').then(e => e.json()).then(e => {fetchGuilds(e)})">Info</button>
+    </div>
+</guild>`
+        });
+    </script>
+</body>
+</html>
